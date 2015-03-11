@@ -260,9 +260,21 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		// 시리얼통신을 주기적으로 보낸다.
 		static int oldT = 0;
 		int curT = GetTickCount();
-		if (curT - oldT > 100)
+		if (curT - oldT > 300)
 		{
-			char buff[5] = { 'S', (char)lAxisX, (char)lAxisY, (char)lAxisZ, (char)lAxisRz };
+			//char buff[5] = { 'S', (char)lAxisX, (char)lAxisY, (char)lAxisZ, (char)lAxisRz };
+			char buff[14] = {
+				//0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
+				0x0, 0x0, 0x0, 0x0, 0x0,
+				//0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
+				(char)lAxisX, (char)lAxisY, (char)lAxisZ, (char)lAxisRz,
+				//0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
+				0x0, 0x0, 0x0, 0x0, 0x0,
+				//0xaa
+			};
+//			for (int i = 5; i < 20; ++i)
+//				buff[i] = NULL;
+
 			g_Serial.SendData(buff, sizeof(buff));
 
 			oldT = curT;
